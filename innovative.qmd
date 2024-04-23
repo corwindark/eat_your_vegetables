@@ -12,11 +12,11 @@ x = d3.scaleLinear().domain([0,10]).range([margin.left, width - margin.right]);
 y = d3.scaleLinear().domain([0,10]).range([0, height-10]);
 
 line = d3.line()
-          .x(function(d, i) { return x(i); })
-          .y(function(d) { return y(d) })
+          .y(function(d, i) { return x(i); })
+          .x(function(d) { return y(d) })
           .curve(d3.curveNatural);
 
-
+/*
 data = { 
   const d = [7.220005838214272,
              2.426939752814512,
@@ -31,11 +31,29 @@ data = {
              6.781543938253611]
   return d; 
 } 
+*/
+
+data = { 
+  const d = [3,
+             7,
+             3,
+             7,
+             3,
+             7,
+             3,
+             7,
+             3,
+             7,
+             3]
+  return d; 
+} 
+
+
 
 d3 = require("d3@7")
 
 
-height = 300
+height = 1000
 width = 1000
 
 margin = ({
@@ -47,6 +65,10 @@ import {slider} from "@jashkenas/inputs"
 ```
 
 ```{ojs}
+
+
+
+
 
 dashSize = 1
 gapSize = 1
@@ -145,4 +167,65 @@ viewof dashOffset = slider({
 
 
 
+```
+
+
+
+```{r}
+
+library(tidyverse)
+
+df <- read.csv("./sampleData.csv")
+
+ojs_define(data2 = df)
+
+```
+
+
+
+```{ojs}
+
+import { aq, op } from '@uwdata/arquero' 
+
+data3 = transpose(data2)
+
+data4 = aq.from(data3)
+
+Inputs.table(data4) 
+
+
+```
+
+
+
+```{ojs}
+
+
+class Plant {
+    constructor() {
+        this.height = 0;
+        this.currentEndpoint = [0,0];
+        this.seedPoint = [0,0];
+        this.renderHeight = 200;
+        this.renderWidth = 400;
+        this.renderedYears = [];
+        this.renderedLeaves = [];
+        this.maxLeafHang = 5;
+        this.leafColor = [];
+        this.branches = [];
+    }
+
+
+
+}
+
+
+```
+
+
+```{ojs}
+
+mutable plant = new Plant()
+
+plant.renderHeight
 ```
