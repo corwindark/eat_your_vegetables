@@ -1,0 +1,148 @@
+---
+title: "innovative visualization"
+author: "Corwin Dark"
+format:
+    html:
+        embed-resources: true
+---
+
+
+```{ojs}
+x = d3.scaleLinear().domain([0,10]).range([margin.left, width - margin.right]);
+y = d3.scaleLinear().domain([0,10]).range([0, height-10]);
+
+line = d3.line()
+          .x(function(d, i) { return x(i); })
+          .y(function(d) { return y(d) })
+          .curve(d3.curveNatural);
+
+
+data = { 
+  const d = [7.220005838214272,
+             2.426939752814512,
+             2.048475381536048,
+             8.049595077755281,
+             8.249606086498298,
+             1.70705343862402,
+             5.213053813058545,
+             2.622044001920474,
+             0.8367786696201751,
+             9.042850365133868,
+             6.781543938253611]
+  return d; 
+} 
+
+d3 = require("d3@7")
+
+
+height = 300
+width = 1000
+
+margin = ({
+  left : 10,
+  right : 10
+})
+import {slider} from "@jashkenas/inputs"
+
+```
+
+```{ojs}
+
+dashSize = 1
+gapSize = 1
+
+path = {
+ const svg = d3.create("svg")
+      .attr("viewBox", [0, 0, width, height]);
+  
+  // Add the path
+  svg.append("path")
+      .attr("d", line(data))
+      .attr("fill", "none")
+      .attr("stroke-width", 2)
+      .attr("stroke-dasharray", dashSize + " " + gapSize)
+      .attr("stroke", "darkgrey");
+    
+  // Label
+  svg.append("text")
+      .text("stroke-dasharray:" + dashSize + " " + gapSize)
+      .attr("x", margin.left)
+      .attr("y", height - 10)
+      .attr("font-family", "monospace");
+  
+ return svg.node();
+}
+
+viewof dashOffset = slider({
+  min: 0, 
+  max: path.childNodes[0].getTotalLength(), 
+  step: 1, 
+  value: 0, 
+  title: "Dash Offset",
+  description: "How far to 'pull' the graph to the left"
+})
+
+
+```
+
+
+```{ojs}
+
+
+
+{
+ // Create the SVG
+ const svg = d3.create("svg")
+      .attr("viewBox", [0, 0, width, height]);
+  
+  // Add the line
+  var path = svg.append("path")
+      .attr("d", line(data))
+      .attr("fill", "none")
+      .attr("stroke-width", 2)
+      .attr("stroke", "darkgrey");
+  
+  // Add text displaying the stroke-dashoffset
+  var text = svg.append("text")
+       .text("stroke-dashoffset: " + dashOffset)
+       .attr("x", margin.left)
+       .attr("y", height - 10)
+       .attr("font-family", "monospace"); 
+  
+  // Get the length of the path, which we will use for the intial offset to "hide"
+  // the graph
+  const length = path.node().getTotalLength();
+  
+  // This function will animate the path over and over again
+  function repeat() {
+    // Animate the path by setting the initial offset and dasharray and then transition the offset to 0
+    path.attr("stroke-dasharray", length + " " + length)
+        .attr("stroke-dashoffset", length)
+          .transition()
+          .ease(d3.easeLinear)
+          .attr("stroke-dashoffset", 0)
+          .duration(6000)
+          .on("end", () => setTimeout(repeat, 1000)); // this will repeat the animation after waiting 1 second
+    
+    // Animate the dashoffset changes 
+    text.transition()
+          .duration(6000)
+          .tween("text", function(t) {
+            const i = d3.interpolateRound(0, length);
+            return function(t) { 
+              this.textContent = "stroke-dashoffset: " + i(t); 
+            };
+          });
+  };
+  
+  // Animate the graph for the first time
+  repeat();
+  
+ return svg.node();
+}
+
+
+
+
+
+```
